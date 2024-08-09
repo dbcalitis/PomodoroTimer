@@ -17,7 +17,7 @@ let timerStatus = "pomodoro";
 chrome.storage.local.set({ "timerOn": false });
 
 // Debug
-chrome.storage.local.set({ "session": 1, "break": 1, "status": "pomodoro", "timer": "00:03" });
+// chrome.storage.local.set({ "session": 1, "break": 1, "status": "pomodoro", "timer": "00:03" });
 
 // Gets the last timer displayed from last Chrome session
 updateInfo()
@@ -105,6 +105,13 @@ function resetTimer() {
     updatePopup();
 }
 
+// Restarts the number of sessions and breaks
+function resetSession() {
+    chrome.storage.local.set({ "session": 1, "break": 1, "status": "pomodoro", "timer": "00:03" });
+    updateInfo();
+    updatePopup();
+}
+
 // Updates the display on the popup window
 function updatePopup() {
     chrome.runtime.sendMessage({ action: 'updateTimer' })
@@ -158,6 +165,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     }
     if (message.action === "resetTimer") {
         resetTimer();
+    }
+    if (message.action === "resetSession") {
+        resetSession();
     }
 });
 

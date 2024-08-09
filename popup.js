@@ -29,6 +29,16 @@ reset.addEventListener("click", function () {
     toggle.innerHTML = "Start";
 });
 
+// Reset Session Button
+let resetSession = document.getElementById("reset_session");
+
+resetSession.addEventListener("click", function () {
+    chrome.runtime.sendMessage({ action: "stopTimer" });
+    chrome.runtime.sendMessage({ action: "resetTimer" });
+    chrome.runtime.sendMessage({ action: "resetSession" });
+    toggle.innerHTML = "Start";
+});
+
 // Listener
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     // Updates the pop up window
