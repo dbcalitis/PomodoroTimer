@@ -112,6 +112,15 @@ function resetSession() {
     updatePopup();
 }
 
+// Makes the timer's status as a pomodoro
+function setPomodoro() {
+    minutes = 0;
+    seconds = 3;
+    timerStatus = "pomodoro";
+    updateStorage();
+    updatePopup();
+}
+
 // Updates the display on the popup window
 function updatePopup() {
     chrome.runtime.sendMessage({ action: 'updateTimer' })
@@ -135,10 +144,7 @@ function updateInfo() {
         if (result["timer"] != undefined) {
             minutes = Number(result["timer"].substring(0, 2));
             seconds = Number(result["timer"].substring(3));
-            console.log(minutes, seconds);
         }
-
-        console.log(result);
 
         if (result["status"] != undefined) {
             timerStatus = result["status"];
@@ -151,11 +157,13 @@ function updateInfo() {
         if (result["break"] != undefined) {
             breakNum = result["break"];
         }
+
     }
     );
 }
 
 /// Listens for the messages from clicked buttons on the popup window
+// needs to be rewritten!
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.action === "startTimer") {
         startTimer();
@@ -168,6 +176,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     }
     if (message.action === "resetSession") {
         resetSession();
+    }
+    if (message.action === "setPomodoro") {
+        setPomodoro();
     }
 });
 

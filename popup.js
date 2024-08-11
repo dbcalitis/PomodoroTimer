@@ -4,11 +4,11 @@
 //     console.log(getCurrentTab());
 // }
 
-let tracker = document.getElementById("tracker");
-let timer = document.getElementById("timer");
+const tracker = document.getElementById("tracker");
+const timer = document.getElementById("timer");
 
 // Toggle Button
-let toggle = document.getElementById("toggle");
+const toggle = document.getElementById("toggle");
 
 toggle.addEventListener("click", function () {
     if (toggle.innerHTML == "Start") {
@@ -21,7 +21,7 @@ toggle.addEventListener("click", function () {
 });
 
 // Reset Button
-let reset = document.getElementById("reset");
+const reset = document.getElementById("reset");
 
 reset.addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "stopTimer" });
@@ -30,7 +30,7 @@ reset.addEventListener("click", function () {
 });
 
 // Reset Session Button
-let resetSession = document.getElementById("reset_session");
+const resetSession = document.getElementById("reset_session");
 
 resetSession.addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "stopTimer" });
@@ -38,6 +38,18 @@ resetSession.addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "resetSession" });
     toggle.innerHTML = "Start";
 });
+
+// Pomodoro Button
+const pomodoroButton = document.getElementById("pomodoro");
+
+pomodoroButton.addEventListener("click", function () {
+    chrome.runtime.sendMessage({ action: "stopTimer" });
+    chrome.runtime.sendMessage({ action: "setPomodoro" });
+    chrome.runtime.sendMessage({ action: "resetTimer" });
+
+    toggle.innerHTML = "Start";
+    pomodoroButton.disabled = true;
+})
 
 // Listener
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -49,20 +61,23 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
                 toggle.innerHTML = "Start";
             }
 
-            if (result["timer"]) {
-                timer.innerHTML = result["timer"];
-                chrome.storage.local.set({ "timer": timer.innerHTML });
-            }
+            // if (result["timer"]) {
+            // }
 
             // Changes the tracker
             // (i.e. shows how many pomodoro sessions/breaks you have done )
             if (result["status"]) {
                 if (result["status"] == "pomodoro") {
                     tracker.innerHTML = `Session #${result["session"]}`;
+                    console.log(result["timer"]);
+                    pomodoroButton.disabled = true;
                 } else {
                     tracker.innerHTML = `Break #${result["break"]}`;
+                    pomodoroButton.disabled = false;
                 }
             }
+            timer.innerHTML = result["timer"];
+            chrome.storage.local.set({ "timer": timer.innerHTML });
         })
     }
 });
@@ -72,6 +87,7 @@ chrome.storage.local.get(["session", "break", "timer", "timerOn", "status", "lon
     if (result["status"]) {
         if (result["status"] == "pomodoro") {
             tracker.innerHTML = `Session #${result["session"]}`;
+            pomodoroButton.disabled = true;
         } else {
             tracker.innerHTML = `Break #${result["break"]}`;
         }
