@@ -81,7 +81,7 @@ function stopTimer() {
 }
 
 // Resets the timer
-function resetTimer() {
+function resetTimer(ignore) {
     chrome.storage.local.get(["status"]).then((result) => {
         if (timerStatus) {
             timerStatus = result["status"];
@@ -91,12 +91,14 @@ function resetTimer() {
         minutes = 0;
         seconds = 3;
     } else {
-        if (breakNum % longBreakInterval == 0) {
-            minutes = 0;
-            seconds = 10;
-        } else {
-            minutes = 0;
-            seconds = 5;
+        if (!ignore) {
+            if (breakNum % longBreakInterval == 0) {
+                minutes = 0;
+                seconds = 10;
+            } else {
+                minutes = 0;
+                seconds = 5;
+            }
         }
     }
 
@@ -117,6 +119,24 @@ function setPomodoro() {
     minutes = 0;
     seconds = 3;
     timerStatus = "pomodoro";
+    updateStorage();
+    updatePopup();
+}
+
+// Sets the timer's status as a short break
+function setShortBreak() {
+    minutes = 0;
+    seconds = 5;
+    timerStatus = "break";
+    updateStorage();
+    updatePopup();
+}
+
+// Sets the timer's status as a long break
+function setLongBreak() {
+    minutes = 0;
+    seconds = 10;
+    timerStatus = "break";
     updateStorage();
     updatePopup();
 }
@@ -172,13 +192,22 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         stopTimer();
     }
     if (message.action === "resetTimer") {
-        resetTimer();
+        resetTimer(false);
+    }
+    if (message.action === "resetTimerIgnore") {
+        resetTimer(true);
     }
     if (message.action === "resetSession") {
         resetSession();
     }
     if (message.action === "setPomodoro") {
         setPomodoro();
+    }
+    if (message.action == "setShortBreak") {
+        setShortBreak();
+    }
+    if (message.action == "setLongBreak") {
+        setLongBreak();
     }
 });
 

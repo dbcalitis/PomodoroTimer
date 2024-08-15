@@ -4,6 +4,9 @@
 //     console.log(getCurrentTab());
 // }
 
+// Debug
+const longBreakInterval = 4;
+
 const tracker = document.getElementById("tracker");
 const timer = document.getElementById("timer");
 
@@ -51,6 +54,35 @@ pomodoroButton.addEventListener("click", function () {
     pomodoroButton.disabled = true;
 })
 
+// Short Break Button
+const shortBreak = document.getElementById("shortBreak");
+
+shortBreak.addEventListener("click", function () {
+    chrome.runtime.sendMessage({ action: "stopTimer" });
+    chrome.runtime.sendMessage({ action: "setShortBreak" });
+    chrome.runtime.sendMessage({ action: "resetTimerignore" });
+
+    toggle.innerHTML = "Start";
+    pomodoroButton.disabled = false;
+    shortBreak.disabled = true;
+    longBreak.disabled = false;
+})
+
+// Long Break Button
+const longBreak = document.getElementById("longBreak");
+
+longBreak.addEventListener("click", function () {
+    chrome.runtime.sendMessage({ action: "stopTimer" });
+    chrome.runtime.sendMessage({ action: "setLongBreak" });
+    chrome.runtime.sendMessage({ action: "resetTimerIgnore" });
+
+    toggle.innerHTML = "Start";
+
+    pomodoroButton.disabled = false;
+    shortBreak.disabled = false;
+    longBreak.disabled = true;
+})
+
 // Listener
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     // Updates the pop up window
@@ -71,6 +103,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
                     tracker.innerHTML = `Session #${result["session"]}`;
                     console.log(result["timer"]);
                     pomodoroButton.disabled = true;
+                    shortBreak.disabled = false;
+                    longBreak.disabled = false;
                 } else {
                     tracker.innerHTML = `Break #${result["break"]}`;
                     pomodoroButton.disabled = false;
