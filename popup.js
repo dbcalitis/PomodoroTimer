@@ -1,8 +1,12 @@
-
 // function createTab() {
 //     chrome.tabs.create({ url: "https://www.google.ca/?hl=en" });
 //     console.log(getCurrentTab());
 // }
+
+// Set up default settings
+// chrome.storage.local.set({
+//     "session": 1, "break": 1, "status": "pomodoro", "sessionTime": 25, "shortBreakTime": 5, "longBreakTime": 15
+// });
 
 // Debug
 const longBreakInterval = 4;
@@ -10,9 +14,69 @@ const longBreakInterval = 4;
 const tracker = document.getElementById("tracker");
 const timer = document.getElementById("timer");
 
-// Toggle Button
+// Settings and Config
+const settingsButton = document.getElementById("settings");
+const applyButton = document.getElementById("apply");
+
+const configPanel = document.getElementById("configPanel");
+const timerPanel = document.getElementById("timerPanel");
+
+configPanel.style.display = "none";
+
+// Buttons
+const reset = document.getElementById("reset");
 const toggle = document.getElementById("toggle");
 
+const pomodoroButton = document.getElementById("pomodoro");
+const shortBreak = document.getElementById("shortBreak");
+const longBreak = document.getElementById("longBreak");
+
+const resetSession = document.getElementById("reset_session");
+
+// Controls display
+settingsButton.addEventListener("click", function () {
+    if (configPanel.style.display == "none") {
+        timerPanel.style.display = "none";
+        configPanel.style.display = "block";
+    } else {
+        configPanel.style.display = "none";
+        timerPanel.style.display = "block";
+    }
+})
+
+// Applies new configuration
+const sessionInput = document.getElementById("sessionInput");
+const shortBreakInput = document.getElementById("shortBreakInput");
+const longBreakInput = document.getElementById("longBreakInput");
+
+applyButton.addEventListener("click", function () {
+    let sessionTime, shortBreakTime, longBreakTime;
+    if (sessionInput.value) {
+        sessionTime = sessionInput.value;
+    } else {
+        sessionTime = 25;
+    }
+
+    console.log(shortBreakInput.value)
+    console.log(longBreakInput.value)
+
+    if (shortBreakInput.value) {
+        shortBreakTime = shortBreakInput.value;
+    } else {
+        shortBreakTime = 5;
+    }
+
+    if (longBreakInput.value) {
+        longBreakTime = longBreakInput.value;
+    } else {
+        longBreakTime = 15;
+    }
+
+    chrome.storage.local.set({ "sessionTime": sessionTime, "shortBreakTime": shortBreakTime, "longBreakTime": longBreakTime });
+    chrome.runtime.sendMessage({ action: "applySettings" });
+})
+
+// Toggle Button
 toggle.addEventListener("click", function () {
     if (toggle.innerHTML == "Start") {
         chrome.runtime.sendMessage({ action: "startTimer" });
@@ -24,8 +88,6 @@ toggle.addEventListener("click", function () {
 });
 
 // Reset Button
-const reset = document.getElementById("reset");
-
 reset.addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "stopTimer" });
     chrome.runtime.sendMessage({ action: "resetTimer" });
@@ -33,30 +95,28 @@ reset.addEventListener("click", function () {
 });
 
 // Reset Session Button
-const resetSession = document.getElementById("reset_session");
-
 resetSession.addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "stopTimer" });
     chrome.runtime.sendMessage({ action: "resetTimer" });
     chrome.runtime.sendMessage({ action: "resetSession" });
+
     toggle.innerHTML = "Start";
+    pomodoroButton.disabled = true;
+    shortBreak.disabled = false;
+    longBreak.disabled = false;
 });
 
 // Pomodoro Button
-const pomodoroButton = document.getElementById("pomodoro");
-
 pomodoroButton.addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "stopTimer" });
     chrome.runtime.sendMessage({ action: "setPomodoro" });
     chrome.runtime.sendMessage({ action: "resetTimer" });
 
-    toggle.innerHTML = "Start";
     pomodoroButton.disabled = true;
+    toggle.innerHTML = "Start";
 })
 
 // Short Break Button
-const shortBreak = document.getElementById("shortBreak");
-
 shortBreak.addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "stopTimer" });
     chrome.runtime.sendMessage({ action: "setShortBreak" });
@@ -69,8 +129,6 @@ shortBreak.addEventListener("click", function () {
 })
 
 // Long Break Button
-const longBreak = document.getElementById("longBreak");
-
 longBreak.addEventListener("click", function () {
     chrome.runtime.sendMessage({ action: "stopTimer" });
     chrome.runtime.sendMessage({ action: "setLongBreak" });
@@ -101,7 +159,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             if (result["status"]) {
                 if (result["status"] == "pomodoro") {
                     tracker.innerHTML = `Session #${result["session"]}`;
-                    console.log(result["timer"]);
                     pomodoroButton.disabled = true;
                     shortBreak.disabled = false;
                     longBreak.disabled = false;

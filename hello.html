@@ -1,17 +1,29 @@
 <html>
 
 <body>
+    <button id="settings">Settings</button>
     <h1>Pomodoro Timer</h1>
-    <h2 id="tracker">Session #1</h2>
-    <div>
-        <button id="pomodoro">Pomodoro</button>
-        <button id="shortBreak"> Short Break</button>
-        <button id="longBreak">Long Break</button>
+
+    <div id="timerPanel">
+        <h2 id="tracker">Session #1</h2>
+        <div>
+            <button id="pomodoro">Pomodoro</button>
+            <button id="shortBreak"> Short Break</button>
+            <button id="longBreak">Long Break</button>
+        </div>
+        <button id="reset_session">Reset Session</button>
+        <h2 id="timer">25:00</h2>
+        <button id="toggle">Start</button>
+        <button id="reset">Reset</button>
     </div>
-    <button id="reset_session">Reset Session</button>
-    <h2 id="timer">25:00</h2>
-    <button id="toggle">Start</button>
-    <button id="reset">Reset</button>
+
+    <div id="configPanel">
+        <input type="number" id="sessionInput" placeholder="Enter session duration (in minutes)">
+        <input type="number" id="shortBreakInput" placeholder="Enter short break duration (in minutes)">
+        <input type="number" id="longBreakInput" placeholder="Enter long break duration (in minutes)">
+        <button id="apply">Apply</button>
+    </div>
+
     <script src="popup.js"></script>
     <script type="module" src="background.js"></script>
 </body>

@@ -1,11 +1,16 @@
 // Find a way to reset the sessions
 // Add buttons: Pomodoro, Short break and Long Break
 let timer;
-let minutes = 0;
-let seconds = 3;
+let minutes = 25;
+let seconds = 0;
 
 let sessionNum = 1; // Number of pomodoro sessions.
 let breakNum = 1; // Number of breaks taken.
+
+let sessionTime = 25; // Minutes in pomodoro.
+let shortBreak = 5; // Minutes in a short break.
+let longBreak = 15; // Minutes in a long break.
+
 // Number of pomodoro sessions to get a long break
 let longBreakInterval = 4;
 
@@ -88,16 +93,16 @@ function resetTimer(ignore) {
         }
     })
     if (timerStatus == "pomodoro") {
-        minutes = 0;
-        seconds = 3;
+        minutes = sessionTime;
+        seconds = 0;
     } else {
         if (!ignore) {
             if (breakNum % longBreakInterval == 0) {
-                minutes = 0;
-                seconds = 10;
+                minutes = longBreak;
+                seconds = 0;
             } else {
-                minutes = 0;
-                seconds = 5;
+                minutes = shortBreak;
+                seconds = 0;
             }
         }
     }
@@ -109,15 +114,19 @@ function resetTimer(ignore) {
 
 // Restarts the number of sessions and breaks
 function resetSession() {
-    chrome.storage.local.set({ "session": 1, "break": 1, "status": "pomodoro", "timer": "00:03" });
+    minutes = sessionTime;
+    seconds = 0;
+
+    chrome.storage.local.set({ "session": 1, "break": 1, "status": "pomodoro" });
     updateInfo();
+    updateStorage();
     updatePopup();
 }
 
 // Makes the timer's status as a pomodoro
 function setPomodoro() {
-    minutes = 0;
-    seconds = 3;
+    minutes = sessionTime;
+    seconds = 0;
     timerStatus = "pomodoro";
     updateStorage();
     updatePopup();
@@ -125,8 +134,8 @@ function setPomodoro() {
 
 // Sets the timer's status as a short break
 function setShortBreak() {
-    minutes = 0;
-    seconds = 5;
+    minutes = shortBreak;
+    seconds = 0;
     timerStatus = "break";
     updateStorage();
     updatePopup();
@@ -134,8 +143,8 @@ function setShortBreak() {
 
 // Sets the timer's status as a long break
 function setLongBreak() {
-    minutes = 0;
-    seconds = 10;
+    minutes = longBreak;
+    seconds = 0;
     timerStatus = "break";
     updateStorage();
     updatePopup();
@@ -160,28 +169,49 @@ function updateStorage() {
 
 // Updates the local variables with the information from chrome.storage.
 function updateInfo() {
-    chrome.storage.local.get(["timer", "status", "session", "break"]).then((result) => {
-        if (result["timer"] != undefined) {
+    chrome.storage.local.get(["timer", "status", "session", "break", "sessionTime", "shortBreakTime", "longBreakTime"]).then((result) => {
+        if (result["timer"]) {
             minutes = Number(result["timer"].substring(0, 2));
             seconds = Number(result["timer"].substring(3));
         }
 
-        if (result["status"] != undefined) {
+        if (result["status"] !== undefined) {
             timerStatus = result["status"];
         }
 
-        if (result["session"] != undefined) {
+        if (result["session"] !== undefined) {
             sessionNum = result["session"];
         }
 
-        if (result["break"] != undefined) {
+        if (result["break"] !== undefined) {
             breakNum = result["break"];
+        }
+
+        if (result["sessionTime"] !== undefined) {
+            sessionTime = result["sessionBreakTime"];
+        }
+
+        if (result["shortBreakTime"] !== undefined) {
+            shortBreak = result["shortBreakTime"];
+        }
+
+        if (result["longBreakTime"] !== undefined) {
+            longBreak = result["longBreakTime"];
         }
 
     }
     );
+
+    applySettings();
 }
 
+function applySettings() {
+    chrome.storage.local.get(["sessionTime", "shortBreakTime", "longBreakTime"]).then((result) => {
+        sessionTime = result["sessionTime"];
+        shortBreak = result["shortBreakTime"];
+        longBreak = result["longBreakTime"];
+    });
+}
 /// Listens for the messages from clicked buttons on the popup window
 // needs to be rewritten!
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -208,6 +238,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     }
     if (message.action == "setLongBreak") {
         setLongBreak();
+    }
+    if (message.action == "applySettings") {
+        applySettings();
     }
 });
 
