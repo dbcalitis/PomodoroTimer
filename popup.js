@@ -4,7 +4,6 @@
 // }
 
 // Task List
-// Fix the undefined timer problem
 // Stylize the pop up
 
 // Set up default settings
@@ -78,6 +77,7 @@ applyButton.addEventListener("click", function () {
 
     chrome.storage.local.set({ "sessionTime": sessionTime, "shortBreakTime": shortBreakTime, "longBreakTime": longBreakTime });
     chrome.runtime.sendMessage({ action: "applySettings" });
+    chrome.runtime.sendMessage({ action: "resetTimer" });
 })
 
 // Toggle Button

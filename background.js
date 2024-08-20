@@ -1,5 +1,3 @@
-// Find a way to reset the sessions
-// Add buttons: Pomodoro, Short break and Long Break
 let timer;
 let minutes = 25;
 let seconds = 0;
@@ -7,7 +5,7 @@ let seconds = 0;
 let sessionNum = 1; // Number of pomodoro sessions.
 let breakNum = 1; // Number of breaks taken.
 
-let sessionTime = 25; // Minutes in pomodoro.
+let sessionTime = undefined; // Minutes in pomodoro.
 let shortBreak = 5; // Minutes in a short break.
 let longBreak = 15; // Minutes in a long break.
 
@@ -87,6 +85,10 @@ function stopTimer() {
 
 // Resets the timer
 function resetTimer(ignore) {
+    if (sessionTime === undefined) { sessionTime = 25; }
+    if (shortBreak === undefined) { shortBreak = 5; }
+    if (longBreak === undefined) { longBreak = 15; }
+
     chrome.storage.local.get(["status"]).then((result) => {
         if (timerStatus) {
             timerStatus = result["status"];
@@ -114,7 +116,11 @@ function resetTimer(ignore) {
 
 // Restarts the number of sessions and breaks
 function resetSession() {
-    minutes = sessionTime;
+    if (sessionTime) {
+        minutes = sessionTime;
+    } else {
+        minutes = 25;
+    }
     seconds = 0;
 
     chrome.storage.local.set({ "session": 1, "break": 1, "status": "pomodoro" });
@@ -125,7 +131,12 @@ function resetSession() {
 
 // Makes the timer's status as a pomodoro
 function setPomodoro() {
-    minutes = sessionTime;
+    if (sessionTime) {
+        minutes = sessionTime;
+    } else {
+        minutes = 25;
+    }
+    console.log(`${minutes} min`)
     seconds = 0;
     timerStatus = "pomodoro";
     updateStorage();
@@ -134,7 +145,11 @@ function setPomodoro() {
 
 // Sets the timer's status as a short break
 function setShortBreak() {
-    minutes = shortBreak;
+    if (shortBreak) {
+        minutes = shortBreak;
+    } else {
+        minutes = 5;
+    }
     seconds = 0;
     timerStatus = "break";
     updateStorage();
@@ -143,7 +158,11 @@ function setShortBreak() {
 
 // Sets the timer's status as a long break
 function setLongBreak() {
-    minutes = longBreak;
+    if (longBreak) {
+        minutes = longBreak;
+    } else {
+        minutes = 15;
+    }
     seconds = 0;
     timerStatus = "break";
     updateStorage();
@@ -170,7 +189,7 @@ function updateStorage() {
 // Updates the local variables with the information from chrome.storage.
 function updateInfo() {
     chrome.storage.local.get(["timer", "status", "session", "break", "sessionTime", "shortBreakTime", "longBreakTime"]).then((result) => {
-        if (result["timer"]) {
+        if (result["timer"] != undefined) {
             minutes = Number(result["timer"].substring(0, 2));
             seconds = Number(result["timer"].substring(3));
         }
@@ -188,15 +207,21 @@ function updateInfo() {
         }
 
         if (result["sessionTime"] !== undefined) {
-            sessionTime = result["sessionBreakTime"];
+            sessionTime = result["sessionTime"];
+        } else {
+            chrome.storage.local.set({ "sessionTime": 25 });
         }
 
         if (result["shortBreakTime"] !== undefined) {
             shortBreak = result["shortBreakTime"];
+        } else {
+            chrome.storage.local.set({ "shortBreakTime": 5 });
         }
 
         if (result["longBreakTime"] !== undefined) {
             longBreak = result["longBreakTime"];
+        } else {
+            chrome.storage.local.set({ "longBreakTime": 15 });
         }
 
     }
