@@ -3,6 +3,10 @@
 //     console.log(getCurrentTab());
 // }
 
+// Task List
+// Fix the undefined timer problem
+// Stylize the pop up
+
 // Set up default settings
 // chrome.storage.local.set({
 //     "session": 1, "break": 1, "status": "pomodoro", "sessionTime": 25, "shortBreakTime": 5, "longBreakTime": 15
