@@ -1,6 +1,7 @@
 <html>
 
 <body>
+    <button id="reset_session">Reset Pomodoro</button>
     <button id="settings">Settings</button>
     <h1>Pomodoro Timer</h1>
 
@@ -11,33 +12,23 @@
             <button id="shortBreak"> Short Break</button>
             <button id="longBreak">Long Break</button>
         </div>
-        <button id="reset_session">Reset Session</button>
         <h2 id="timer">25:00</h2>
         <button id="toggle">Start</button>
         <button id="reset">Reset</button>
     </div>
 
     <div id="configPanel">
-        <input type="number" id="sessionInput" placeholder="Enter session duration (in minutes)">
-        <input type="number" id="shortBreakInput" placeholder="Enter short break duration (in minutes)">
-        <input type="number" id="longBreakInput" placeholder="Enter long break duration (in minutes)">
+        <div>
+            <input type="number" id="sessionInput" placeholder="Enter session duration (in minutes)">
+            <input type="number" id="shortBreakInput" placeholder="Enter short break duration (in minutes)">
+            <input type="number" id="longBreakInput" placeholder="Enter long break duration (in minutes)">
+        </div>
         <button id="apply">Apply</button>
     </div>
 
     <script src="popup.js"></script>
     <script type="module" src="background.js"></script>
+    <link rel="stylesheet" href="style.css">
 </body>
-
-<!-- <head>
-    <title>Alarms Popup</title>
-
-    <script src="popup.js"></script>
-</head>
-
-<body>
-    <a href="" id="alarmOn">ON</a>
-    <a href="" id="alarmOff">OFF</a>
-    </ul>
-</body> -->
 
 </html>

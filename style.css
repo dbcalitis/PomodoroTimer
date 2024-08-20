@@ -1,0 +1,58 @@
+html {
+    color: white;
+    background-color: #4D2D18;
+    width: 300px;
+    height: 300px;
+}
+
+button {
+    background-color: #8A6240;
+    display: inline-block;
+    border: none;
+    padding: 1.25% 2.5%;
+    color: white;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #CABA9C;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+input {
+    background-color: #CABA9C;
+    color: black;
+    border: none;
+    width: 70%;
+    height: 15%;
+    margin: 1%;
+}
+
+::placeholder {
+    color: black;
+}
+
+#timerPanel {
+    text-align: center;
+}
+
+#timer {
+    font-size: 500%;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10%;
+}
+
+#configPanel {
+    text-align: center;
+    display: block;
+}
+
+#apply {
+    display: inline-block;
+}
