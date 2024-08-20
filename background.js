@@ -32,7 +32,6 @@ updateInfo()
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 let timerDisplay = `${zeroPad(minutes, 2)}:${zeroPad(seconds, 2)}`;
 
-
 // Passes time on the timer
 function passTime() {
     seconds -= 1;
@@ -52,15 +51,21 @@ function passTime() {
     // Stops the timer
     if (timerDisplay == "00:00") {
         if (timerStatus) {
+            let message;
+
             // Changes the status of the timer
             if (timerStatus == "pomodoro") {
                 timerStatus = "break";
                 sessionNum++;
+                message = "Time to take a break!";
             } else {
                 timerStatus = "pomodoro";
                 breakNum++;
+                message = "Time to work!";
             }
+            chrome.runtime.sendMessage({ action: 'playSound' });
         }
+
         updateStorage();
         resetTimer();
         stopTimer();

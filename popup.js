@@ -168,6 +168,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             chrome.storage.local.set({ "timer": timer.innerHTML });
         })
     }
+
+    if (message.action === "playSound") {
+        chrome.storage.local.get(["status"]).then((result) => {
+            if (result["status"] === "pomodoro") {
+                createNotification("Time to take a break!");
+            } else {
+                createNotification("Time to work!");
+            }
+        })
+    }
 });
 
 // Sets up the pop up window
@@ -193,3 +203,21 @@ chrome.storage.local.get(["session", "break", "timer", "timerOn", "status", "lon
         chrome.storage.local.set({ "longBreakInterval": 4 });
     }
 });
+
+function createNotification(message) {
+    let sound = new Audio("bell.mp3");
+    sound.volume = 1;
+    sound.play();
+
+    chrome.notifications.create(
+        "name-for-notification",
+        {
+            type: "basic",
+            iconUrl: "hello_extensions.png",
+            title: "Pomodoro Timer",
+            message: message,
+        },
+        function () { }
+    );
+}
+
