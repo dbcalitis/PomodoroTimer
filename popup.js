@@ -60,9 +60,6 @@ applyButton.addEventListener("click", function () {
         sessionTime = 25;
     }
 
-    console.log(shortBreakInput.value)
-    console.log(longBreakInput.value)
-
     if (shortBreakInput.value) {
         shortBreakTime = shortBreakInput.value;
     } else {
@@ -77,7 +74,6 @@ applyButton.addEventListener("click", function () {
 
     chrome.storage.local.set({ "sessionTime": sessionTime, "shortBreakTime": shortBreakTime, "longBreakTime": longBreakTime });
     chrome.runtime.sendMessage({ action: "applySettings" });
-    chrome.runtime.sendMessage({ action: "resetTimer" });
 })
 
 // Toggle Button
@@ -154,9 +150,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             if (!result["timerOn"]) {
                 toggle.innerHTML = "Start";
             }
-
-            // if (result["timer"]) {
-            // }
 
             // Changes the tracker
             // (i.e. shows how many pomodoro sessions/breaks you have done )

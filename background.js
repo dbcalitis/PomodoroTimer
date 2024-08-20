@@ -1,3 +1,6 @@
+// Task List
+// Create a model for the timer
+
 let timer;
 let minutes = 25;
 let seconds = 0;
@@ -109,7 +112,7 @@ function resetTimer(ignore) {
         }
     }
 
-    timerDisplay = `${zeroPad(minutes, 2)}:${zeroPad(seconds, 2)}`;
+    let timerDisplay = `${zeroPad(minutes, 2)}:${zeroPad(seconds, 2)}`;
     chrome.storage.local.set({ "timer": timerDisplay });
     updatePopup();
 }
@@ -119,7 +122,7 @@ function resetSession() {
     if (sessionTime) {
         minutes = sessionTime;
     } else {
-        minutes = 25;
+        minutes, sessionTime = 25;
     }
     seconds = 0;
 
@@ -134,9 +137,8 @@ function setPomodoro() {
     if (sessionTime) {
         minutes = sessionTime;
     } else {
-        minutes = 25;
+        minutes, sessionTime = 25;
     }
-    console.log(`${minutes} min`)
     seconds = 0;
     timerStatus = "pomodoro";
     updateStorage();
@@ -148,7 +150,7 @@ function setShortBreak() {
     if (shortBreak) {
         minutes = shortBreak;
     } else {
-        minutes = 5;
+        minutes, shortBreak = 5;
     }
     seconds = 0;
     timerStatus = "break";
@@ -161,7 +163,7 @@ function setLongBreak() {
     if (longBreak) {
         minutes = longBreak;
     } else {
-        minutes = 15;
+        minutes, longBreak = 15;
     }
     seconds = 0;
     timerStatus = "break";
@@ -237,36 +239,38 @@ function applySettings() {
         longBreak = result["longBreakTime"];
     });
 }
+
 /// Listens for the messages from clicked buttons on the popup window
-// needs to be rewritten!
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    if (message.action === "startTimer") {
-        startTimer();
-    }
-    if (message.action === "stopTimer") {
-        stopTimer();
-    }
-    if (message.action === "resetTimer") {
-        resetTimer(false);
-    }
-    if (message.action === "resetTimerIgnore") {
-        resetTimer(true);
-    }
-    if (message.action === "resetSession") {
-        resetSession();
-    }
-    if (message.action === "setPomodoro") {
-        setPomodoro();
-    }
-    if (message.action == "setShortBreak") {
-        setShortBreak();
-    }
-    if (message.action == "setLongBreak") {
-        setLongBreak();
-    }
-    if (message.action == "applySettings") {
-        applySettings();
+    switch (message.action) {
+        case "startTimer":
+            startTimer();
+            break;
+        case "stopTimer":
+            stopTimer();
+            break;
+        case "resetTimer":
+            resetTimer(false);
+            break;
+        case "resetTimerIgnore":
+            resetTimer(true)
+            break;
+        case "resetSession":
+            resetSession();
+            break;
+        case "setPomodoro":
+            setPomodoro();
+            break;
+        case "setShortBreak":
+            setShortBreak();
+            break;
+        case "setLongBreak":
+            setLongBreak();
+            break;
+        case "applySettings":
+            applySettings();
+            break;
+        default:
+            console.log("Error");
     }
 });
-
-console.log("background running");
