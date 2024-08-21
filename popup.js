@@ -149,6 +149,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             // Checks if the timer is off
             if (!result["timerOn"]) {
                 toggle.innerHTML = "Start";
+            } else {
+                toggle.innerHTML = "Stop";
             }
 
             // Changes the tracker
