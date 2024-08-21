@@ -1,12 +1,12 @@
 html {
     color: white;
-    background-color: #4D2D18;
+    background-color: #014421;
     width: 300px;
     height: 300px;
 }
 
 button {
-    background-color: #8A6240;
+    background-color: #355E3B;
     display: inline-block;
     border: none;
     padding: 1.25% 2.5%;
@@ -15,7 +15,7 @@ button {
 }
 
 button:hover {
-    background-color: #CABA9C;
+    background-color: #8A9A5B;
     cursor: pointer;
 }
 
@@ -25,7 +25,7 @@ button:disabled {
 }
 
 input {
-    background-color: #CABA9C;
+    background-color: #8A9A5B;
     color: black;
     border: none;
     width: 70%;
