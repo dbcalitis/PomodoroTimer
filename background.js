@@ -17,13 +17,10 @@ let longBreakInterval = 4;
 
 let timerStatus = "pomodoro";
 
-// Debug
-// chrome.storage.local.set({ "session": 1, "break": 1, "status": "pomodoro", "timer": "00:03" })
+// const Timer = require("./timer.js");
+
 // Make sures the timer does not start when browser is opened
 chrome.storage.local.set({ "timerOn": false });
-
-// Debug
-// chrome.storage.local.set({ "session": 1, "break": 1, "status": "pomodoro", "timer": "00:03" });
 
 // Gets the last timer displayed from last Chrome session
 updateInfo()

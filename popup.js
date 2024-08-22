@@ -1,16 +1,3 @@
-// function createTab() {
-//     chrome.tabs.create({ url: "https://www.google.ca/?hl=en" });
-//     console.log(getCurrentTab());
-// }
-
-// Task List
-// Stylize the pop up
-
-// Set up default settings
-// chrome.storage.local.set({
-//     "session": 1, "break": 1, "status": "pomodoro", "sessionTime": 25, "shortBreakTime": 5, "longBreakTime": 15
-// });
-
 // Debug
 const longBreakInterval = 4;
 
