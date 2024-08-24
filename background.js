@@ -17,7 +17,9 @@ let longBreakInterval = 4;
 
 let timerStatus = "pomodoro";
 
-// const Timer = require("./timer.js");
+const Timer = require("./timer.js");
+
+let timerModel = new Timer();
 
 // Make sures the timer does not start when browser is opened
 chrome.storage.local.set({ "timerOn": false });
