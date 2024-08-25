@@ -48,8 +48,16 @@ export class Timer {
         this.timerDisplay = timer;
     }
 
+    getTimerDisplay(timer) {
+        return this.timerDisplay;
+    }
+
     setStatus(status) {
         this.status = status;
+    }
+
+    getStatus() {
+        return this.status;
     }
 
     toggleTimer(isOn) {
@@ -60,8 +68,16 @@ export class Timer {
         this.sessionNum = sessionNum;
     }
 
+    getSessionNum() {
+        return this.sessionNum;
+    }
+
     setBreakNum(breakNum) {
         this.breakNum = breakNum;
+    }
+
+    getBreakNum() {
+        return this.breakNum;
     }
 
     setShortBreak() {
