@@ -44,6 +44,10 @@ export class Timer {
         this.timer = `${zeroPad(minutes, 2)}:${zeroPad(seconds, 2)}`;
     }
 
+    getTime() {
+        return [this.minutes, this.seconds];
+    }
+
     setTimerDisplay(timer) {
         this.timerDisplay = timer;
     }
